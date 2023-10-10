@@ -151,6 +151,7 @@ export default class Keeper {
           };
         }[];
       } = await this.rpc.post("/", chunk);
+      data.map(d=>console.log('data:',data))
       if(!Array.isArray(data) && (data as any).error){
         throw Error(`RPC request code:${(data as any)?.error?.code} message:${(data as any)?.error?.message}`)
       }
