@@ -250,6 +250,9 @@ export default class Keeper {
     // Create set of successful transactions
     const successTxHash: Set<string> = new Set();
     for (const tx of txData) {
+      if(!tx?.result?.status){
+        throw Error(`There is no status attribute in the transaction hash:${tx?.result?.transactionHash}`)
+      }
       // Filter for success
       if (tx.result.status === "0x1") {
         successTxHash.add(tx.result.transactionHash.toLowerCase());
