@@ -156,8 +156,9 @@ export default class Keeper {
           console.log('data:',data)
         }
       })
-      if(!Array.isArray(data) && (data as any).error){
-        throw Error(`RPC request code:${(data as any)?.error?.code} message:${(data as any)?.error?.message}`)
+      const error = Array.isArray(data) ? (data[0] as any)?.error : (data as any)?.error
+      if(error){
+        throw Error(`RPC request code:${error?.code} message:${error?.error?.message}`)
       }
       // Concat results
       txData.push(...data);
