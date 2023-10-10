@@ -22,11 +22,11 @@ async function execute(): Promise<void> {
   await Promise.all([
     // Run keeper sync
     keeper.sync(),
-    // Run stats 15s collection
+    // // Run stats 15s collection
     stats.sync15s(),
-    // Run stats 30m collection
+    // // Run stats 30m collection
     stats.sync30m(),
-    // Run profile sync
+    // // Run profile sync
     profile.sync(),
   ]);
 }

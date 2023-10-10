@@ -111,6 +111,7 @@ export default class Profile {
     for (const user of users) {
       // Sync metadata
       await this.syncUser(user.address);
+      await sleep(this.timeout);
     }
   }
 

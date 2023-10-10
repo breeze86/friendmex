@@ -139,7 +139,7 @@ export default class Keeper {
     }[] = [];
 
     // Execute batch data request in chunks of 950
-    for (const chunk of [...chunks(batch, 950)]) {
+    for (const chunk of [...chunks(batch, 100)]) {
       // Execute request for batch tx data
       const {
         data,
@@ -151,11 +151,12 @@ export default class Keeper {
           };
         }[];
       } = await this.rpc.post("/", chunk);
-
+      if(!Array.isArray(data) && (data as any).error){
+        throw Error(`RPC request code:${(data as any)?.error?.code} message:${(data as any)?.error?.message}`)
+      }
       // Concat results
       txData.push(...data);
     }
-
     // Return tx data
     return txData;
   }
@@ -180,7 +181,6 @@ export default class Keeper {
         id: i,
         jsonrpc: "2.0",
       }));
-
     // Execute request for batch blocks + transactions
     const {
       data: blockData,
@@ -198,7 +198,6 @@ export default class Keeper {
         };
       }[];
     } = await this.rpc.post("/", batchBlockRequests);
-
     // Setup contract
     const contractAddress: string = constants.CONTRACT_ADDRESS.toLowerCase();
     const contractSignatures: string[] = [
@@ -221,7 +220,6 @@ export default class Keeper {
         }
       }
     }
-
     // If no relevant tx hashes
     if (txHashes.length === 0) {
       // Update latest synced block
