@@ -358,6 +358,8 @@ export default class Keeper {
         amount: tx.amount,
         cost: tx.cost,
       })),
+      // Skip conflicting data
+      skipDuplicates: true
     });
 
     // Insert subjects and trades as atomic transaction
