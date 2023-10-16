@@ -139,7 +139,7 @@ export default class Keeper {
     }[] = [];
 
     // Execute batch data request in chunks of 950
-    for (const chunk of [...chunks(batch, 100)]) {
+    for (const chunk of [...chunks(batch, 20)]) {
       // Execute request for batch tx data
       const {
         data,

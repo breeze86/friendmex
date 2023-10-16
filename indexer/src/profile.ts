@@ -76,12 +76,12 @@ export default class Profile {
 
       // Log user
       logger.info(`Profile: collected @${data.twitterUsername}: ${address}`);
-    } catch {
+    } catch(error) {
       // Timeout for a few seconds, exponential backoff
       this.timeout *= 2;
       await sleep(this.timeout);
       logger.error(
-        `Error on profile collection, sleeping for ${this.timeout / 1000}s`
+        `Error on profile collection, sleeping for ${this.timeout / 1000}s, err:${error}`
       );
     }
   }
