@@ -130,6 +130,54 @@ export default class Keeper {
    * Chunks batch data request processing to avoid 1K request limit
    * @param {RPCMethod[]} batch to execute
    */
+  async chunkBlockNumberCall(batch: RPCMethod[]) {
+    let txData: {
+      result: {
+        number: string;
+        timestamp: string;
+        transactions: {
+          from: string;
+          hash: string;
+          to: string;
+          input: string;
+        }[];
+      };
+    }[] = [];
+
+    // Execute batch data request in chunks of 950
+    for (const chunk of [...chunks(batch, 20)]) {
+      // Execute request for batch tx data
+      const {
+        data,
+      }: {
+        data: {
+          result: {
+            number: string;
+            timestamp: string;
+            transactions: {
+              from: string;
+              hash: string;
+              to: string;
+              input: string;
+            }[];
+          };
+        }[];
+      } = await this.rpc.post("/", chunk);
+      const error = Array.isArray(data) ? (data[0] as any)?.error : (data as any)?.error
+      if (error) {
+        throw Error(`RPC request code:${error?.code} message:${error?.message}`)
+      }
+      // Concat results
+      txData.push(...data);
+    }
+    // Return tx data
+    return txData;
+  }
+
+  /**
+   * Chunks batch data request processing to avoid 1K request limit
+   * @param {RPCMethod[]} batch to execute
+   */
   async chunkTxCall(batch: RPCMethod[]) {
     let txData: {
       result: {
@@ -139,7 +187,7 @@ export default class Keeper {
     }[] = [];
 
     // Execute batch data request in chunks of 950
-    for (const chunk of [...chunks(batch, 20)]) {
+    for (const chunk of [...chunks(batch, 10)]) {
       // Execute request for batch tx data
       const {
         data,
@@ -185,22 +233,34 @@ export default class Keeper {
     console.log('batchBlockRequests[0]', batchBlockRequests?.length > 0 ? batchBlockRequests[0] : null)
     console.log('batchBlockRequests length', batchBlockRequests?.length)
     // Execute request for batch blocks + transactions
-    const {
-      data: blockData,
-    }: {
-      data: {
-        result: {
-          number: string;
-          timestamp: string;
-          transactions: {
-            from: string;
-            hash: string;
-            to: string;
-            input: string;
-          }[];
-        };
-      }[];
-    } = await this.rpc.post("/", batchBlockRequests);
+    // const {
+    //   data: blockData,
+    // }: {
+    //   data: {
+    //     result: {
+    //       number: string;
+    //       timestamp: string;
+    //       transactions: {
+    //         from: string;
+    //         hash: string;
+    //         to: string;
+    //         input: string;
+    //       }[];
+    //     };
+    //   }[];
+    // } = await this.rpc.post("/", batchBlockRequests);
+    const blockData: {
+      result: {
+        number: string;
+        timestamp: string;
+        transactions: {
+          from: string;
+          hash: string;
+          to: string;
+          input: string;
+        }[];
+      };
+    }[] = await this.chunkBlockNumberCall(batchBlockRequests);
     console.log('blockData[0]', blockData?.length > 0 ? blockData[0] : null)
     console.log('blockData length', blockData?.length)
     // Setup contract
