@@ -288,6 +288,8 @@ export default class Keeper {
         jsonrpc: "2.0",
       }));
 
+    console.log('txBatchRequests[0]',txBatchRequests[0])
+    console.log('txBatchRequests length',txBatchRequests.length)
     // Execute request for batch tx data
     const txData = await this.chunkTxCall(txBatchRequests);
     console.log('txData[0]',txData[0])
