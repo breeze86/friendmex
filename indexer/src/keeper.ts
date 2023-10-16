@@ -242,15 +242,14 @@ export default class Keeper {
         }[];
       };
     }[] = await this.chunkBlockNumberCall(batchBlockRequests);
-    console.log('blockData',blockData[0])
-    console.log('blockData length',blockData.length)
     // Setup contract
     const contractAddress: string = constants.CONTRACT_ADDRESS.toLowerCase();
     const contractSignatures: string[] = [
       constants.SIGNATURES.BUY,
       constants.SIGNATURES.SELL,
     ];
-
+    console.log('contractAddress',contractAddress)
+    console.log('contractSignatures',contractSignatures)
     // Filter for transaction hashes that are either BUY or SELL to friend.tech contract
     let txHashes: string[] = [];
     for (const block of blockData) {
