@@ -230,25 +230,6 @@ export default class Keeper {
         id: i,
         jsonrpc: "2.0",
       }));
-    console.log('batchBlockRequests[0]', batchBlockRequests?.length > 0 ? batchBlockRequests[0] : null)
-    console.log('batchBlockRequests length', batchBlockRequests?.length)
-    // Execute request for batch blocks + transactions
-    // const {
-    //   data: blockData,
-    // }: {
-    //   data: {
-    //     result: {
-    //       number: string;
-    //       timestamp: string;
-    //       transactions: {
-    //         from: string;
-    //         hash: string;
-    //         to: string;
-    //         input: string;
-    //       }[];
-    //     };
-    //   }[];
-    // } = await this.rpc.post("/", batchBlockRequests);
     const blockData: {
       result: {
         number: string;
@@ -261,8 +242,6 @@ export default class Keeper {
         }[];
       };
     }[] = await this.chunkBlockNumberCall(batchBlockRequests);
-    console.log('blockData[0]', blockData?.length > 0 ? blockData[0] : null)
-    console.log('blockData length', blockData?.length)
     // Setup contract
     const contractAddress: string = constants.CONTRACT_ADDRESS.toLowerCase();
     const contractSignatures: string[] = [
