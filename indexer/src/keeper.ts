@@ -248,8 +248,6 @@ export default class Keeper {
       constants.SIGNATURES.BUY,
       constants.SIGNATURES.SELL,
     ];
-    console.log('contractAddress',contractAddress)
-    console.log('contractSignatures',contractSignatures)
     // Filter for transaction hashes that are either BUY or SELL to friend.tech contract
     let txHashes: string[] = [];
     for (const block of blockData) {
@@ -265,6 +263,7 @@ export default class Keeper {
         }
       }
     }
+    console.log('txHashes',txHashes)
     // If no relevant tx hashes
     if (txHashes.length === 0) {
       // Update latest synced block
@@ -291,6 +290,8 @@ export default class Keeper {
 
     // Execute request for batch tx data
     const txData = await this.chunkTxCall(txBatchRequests);
+    console.log('txData[0]',txData[0])
+    console.log('txData length',txData.length)
 
     // Create set of successful transactions
     const successTxHash: Set<string> = new Set();
