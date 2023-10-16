@@ -71,9 +71,9 @@ export default class Keeper {
     // If value exists
     return value
       ? // Return numeric
-        Number(value)
+      Number(value)
       : // Else return 1 block before contract deploy
-        constants.CONTRACT_DEPLOY_BLOCK - 1;
+      constants.CONTRACT_DEPLOY_BLOCK - 1;
   }
 
   /**
@@ -152,7 +152,7 @@ export default class Keeper {
         }[];
       } = await this.rpc.post("/", chunk);
       const error = Array.isArray(data) ? (data[0] as any)?.error : (data as any)?.error
-      if(error){
+      if (error) {
         throw Error(`RPC request code:${error?.code} message:${error?.message}`)
       }
       // Concat results
@@ -182,6 +182,8 @@ export default class Keeper {
         id: i,
         jsonrpc: "2.0",
       }));
+    console.log('batchBlockRequests[0]', batchBlockRequests?.length > 0 ? batchBlockRequests[0] : null)
+    console.log('batchBlockRequests length', batchBlockRequests?.length)
     // Execute request for batch blocks + transactions
     const {
       data: blockData,
@@ -199,6 +201,8 @@ export default class Keeper {
         };
       }[];
     } = await this.rpc.post("/", batchBlockRequests);
+    console.log('blockData[0]', blockData?.length > 0 ? blockData[0] : null)
+    console.log('blockData length', blockData?.length)
     // Setup contract
     const contractAddress: string = constants.CONTRACT_ADDRESS.toLowerCase();
     const contractSignatures: string[] = [
@@ -251,7 +255,7 @@ export default class Keeper {
     // Create set of successful transactions
     const successTxHash: Set<string> = new Set();
     for (const tx of txData) {
-      if(!tx?.result?.status){
+      if (!tx?.result?.status) {
         throw Error(`There is no status attribute in the transaction hash:${tx?.result?.transactionHash}`)
       }
       // Filter for success
